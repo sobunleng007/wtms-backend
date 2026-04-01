@@ -45,15 +45,23 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(java.util.List.of("https://wtms-frontend.vercel.app"));
-        configuration.setAllowedMethods(java.util.List.of("https://wtms-frontend.vercel.app/**"));
+        // 1. Set all valid Origins (No "/**" at the end!)
+        configuration.setAllowedOrigins(java.util.List.of(
+                "http://localhost:3000",
+                "https://wtms-frontend.vercel.app"
+        ));
+        // 2. Set allowed Methods (ONLY HTTP verbs)
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type"));
+        // 3. Set allowed Headers (Include the ngrok skip header)
+        configuration.setAllowedHeaders(java.util.List.of(
+                "Authorization",
+                "Content-Type",
+                "ngrok-skip-browser-warning"
+        ));
         configuration.setAllowCredentials(true);
-
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
