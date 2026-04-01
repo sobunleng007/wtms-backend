@@ -177,6 +177,18 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>3.4.1</version>
@@ -187,6 +199,9 @@
                     <to>
                         <image>ghcr.io/${project.groupId}/${project.artifactId}</image>
                     </to>
+                    <container>
+                        <mainClass>com.wtmsbackend.WtmsBackendApplication</mainClass>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>
