@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:9999/wtms_db
-    username: Admin
-    password: Admin@2026
+    url: jdbc:postgresql://114.29.239.33:5432/wtms
+    username: postgres
+    password: Postgres@2026
     driver-class-name: org.postgresql.Driver
 cloudinary:
   cloud-name: dkloakzs6

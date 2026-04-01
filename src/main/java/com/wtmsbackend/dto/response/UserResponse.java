@@ -21,5 +21,4 @@ public class UserResponse {
     private Integer departmentId;
     private String  departmentName;
     private String  role;
-    // New Verson
 }

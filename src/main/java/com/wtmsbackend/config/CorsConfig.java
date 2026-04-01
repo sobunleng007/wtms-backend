@@ -10,9 +10,13 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Apply to all endpoints
+                .allowedOrigins("https://wtms-frontend.vercel.app")
+                .allowedOrigins("https://wtms-frontend.vercel.app/**")
                 .allowedOrigins("http://localhost:3000") // Allow your Next.js local server
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
 }
+
+
