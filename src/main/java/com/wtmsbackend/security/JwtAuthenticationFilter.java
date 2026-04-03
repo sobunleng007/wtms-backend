@@ -20,46 +20,48 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+  private final JwtService jwtService;
+  private final UserDetailsService userDetailsService;
 
-    // JwtAuthenticationFilter.java
-    @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+  // JwtAuthenticationFilter.java
+  @Override
+  protected void doFilterInternal(
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+    final String authHeader = request.getHeader("Authorization");
 
-        // 1. Strict check: Must exist, start with Bearer, AND contain two dots (.)
-        if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.split("\\.").length != 3) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        final String jwt = authHeader.substring(7);
-
-        try {
-            final String userEmail = jwtService.extractUsername(jwt);
-
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
-        } catch (Exception e) {
-            // 2. Catch parsing errors so the whole server doesn't crash 500
-            logger.error("Cannot set user authentication: {}");
-        }
-
-        filterChain.doFilter(request, response);
+    // 1. Strict check: Must exist, start with Bearer, AND contain two dots (.)
+    if (authHeader == null
+        || !authHeader.startsWith("Bearer ")
+        || authHeader.split("\\.").length != 3) {
+      filterChain.doFilter(request, response);
+      return;
     }
+
+    final String jwt = authHeader.substring(7);
+
+    try {
+      final String userEmail = jwtService.extractUsername(jwt);
+
+      if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+        if (jwtService.isTokenValid(jwt, userDetails)) {
+          UsernamePasswordAuthenticationToken authToken =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+      }
+    } catch (Exception e) {
+      // 2. Catch parsing errors so the whole server doesn't crash 500
+      logger.error("Cannot set user authentication: {}");
+    }
+
+    filterChain.doFilter(request, response);
+  }
 }

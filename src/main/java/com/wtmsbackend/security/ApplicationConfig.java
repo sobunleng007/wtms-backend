@@ -17,32 +17,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository repository;
+  private final UserRepository repository;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    return username ->
+        repository
+            .findByEmail(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        // Pass userDetailsService() directly into the constructor
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    // Pass userDetailsService() directly into the constructor
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
 
-        // The password encoder still uses the standard setter method
-        authProvider.setPasswordEncoder(passwordEncoder());
+    // The password encoder still uses the standard setter method
+    authProvider.setPasswordEncoder(passwordEncoder());
 
-        return authProvider;
-    }
+    return authProvider;
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

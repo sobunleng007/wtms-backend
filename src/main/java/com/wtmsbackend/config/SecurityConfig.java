@@ -48,7 +48,8 @@ public class SecurityConfig {
         // 1. Set all valid Origins (No "/**" at the end!)
         configuration.setAllowedOrigins(java.util.List.of(
                 "http://localhost:3000",
-                "https://wtms-frontend.vercel.app"
+                "https://wtms-frontend.vercel.app",
+                "https://braeden-gummatous-drastically.ngrok-free.dev/swagger-ui/index.html#/"
         ));
         // 2. Set allowed Methods (ONLY HTTP verbs)
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
